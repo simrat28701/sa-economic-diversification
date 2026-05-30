@@ -1,0 +1,2 @@
+*.do linguist-language=Stata 
+*.tex linguist-language=TeX 

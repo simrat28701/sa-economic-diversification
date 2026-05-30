@@ -1,0 +1,391 @@
+--------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\Simrat Khalsa\Downloads\Econometrics Research Project\diversification_analys
+> is.txt
+  log type:  text
+ opened on:   2 Apr 2026, 18:36:09
+
+. 
+. *** DESCRIPTIVE STATISTICS ***
+. * Load and describe dataset
+. import delimited "diversification.csv", clear
+(encoding automatically selected: ISO-8859-1)
+(36 vars, 32 obs)
+
+. *remove additional variables
+. drop v7-v36
+
+. describe 
+
+Contains data
+ Observations:            32                  
+    Variables:             6                  
+--------------------------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+--------------------------------------------------------------------------------------------------
+year            int     %8.0g                 Year
+oil_rents       float   %9.0g                 Oil_Rents
+services        float   %9.0g                 Services
+industry        float   %9.0g                 Industry
+fdi             float   %9.0g                 FDI
+vision2030      byte    %8.0g                 Vision2030
+--------------------------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+
+. 
+. * Declare Time-Series
+. tsset year
+
+Time variable: year, 1990 to 2021
+        Delta: 1 unit
+
+. 
+. * generate Non-Oil GDP share of total GDP
+. gen div = services + industry
+
+. 
+. * Descriptive Statistics
+. summarize oil_rents div fdi 
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+   oil_rents |         32    34.44481    10.24739   15.97891    54.0858
+         div |         32    94.63968    1.842807   91.75917   97.17559
+         fdi |         32    .6456047    1.082103  -1.307818   3.185186
+
+. summarize oil_rents div fdi if vision2030 == 0 //pre-policy
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+   oil_rents |         26    37.17433    9.244074   21.26678    54.0858
+         div |         26    94.67666    1.884446   92.04008   97.17559
+         fdi |         26    .4817429    .9607384  -1.307818    2.91838
+
+. summarize oil_rents div fdi if vision2030 == 1 // post-policy
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+   oil_rents |          6    22.61689    4.143754   15.97891   28.08428
+         div |          6    94.47947    1.805884   91.75917   96.32359
+         fdi |          6    1.355672    1.378449   .1368014   3.185186
+
+. 
+. log close
+      name:  <unnamed>
+       log:  C:\Users\Simrat Khalsa\Downloads\Econometrics Research Project\diversification_analys
+> is.txt
+  log type:  text
+ closed on:   2 Apr 2026, 18:36:10
+--------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\Simrat Khalsa\Downloads\Econometrics Research Project\diversification_analys
+> is.txt
+  log type:  text
+ opened on:   2 Apr 2026, 18:36:10
+
+. 
+. * Generate log variables for the Log-Log (Elasticity) model
+. gen ln_fdi = log(fdi + 2)
+
+. gen ln_oil = log(oil_rents)
+
+. gen ln_services = log(services)
+
+. gen ln_industry = log(industry)
+
+. gen ln_div = log(div)
+
+. 
+. *** REGRESSION ANALYSIS ***
+. 
+. * Standard OLS Regression
+. regress div oil_rents fdi vision2030
+
+      Source |       SS           df       MS      Number of obs   =        32
+-------------+----------------------------------   F(3, 28)        =      6.65
+       Model |  43.7981436         3  14.5993812   Prob > F        =    0.0016
+    Residual |  61.4758908        28  2.19556753   R-squared       =    0.4160
+-------------+----------------------------------   Adj R-squared   =    0.3535
+       Total |  105.274034        31   3.3959366   Root MSE        =    1.4817
+
+------------------------------------------------------------------------------
+         div | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+   oil_rents |   .1408421   .0317991     4.43   0.000     .0757046    .2059796
+         fdi |   -.047537   .2626363    -0.18   0.858    -.5855232    .4904491
+  vision2030 |   1.894662   .8657376     2.19   0.037     .1212791    3.668045
+       _cons |   89.46385   1.205226    74.23   0.000     86.99505    91.93264
+------------------------------------------------------------------------------
+
+. predict r_linear, residuals // Generate residuals for diagnostic testing
+
+. 
+. * Log-Log Model
+. regress ln_div ln_oil ln_fdi vision2030
+
+      Source |       SS           df       MS      Number of obs   =        32
+-------------+----------------------------------   F(3, 28)        =      6.26
+       Model |  .004722294         3  .001574098   Prob > F        =    0.0022
+    Residual |  .007039957        28  .000251427   R-squared       =    0.4015
+-------------+----------------------------------   Adj R-squared   =    0.3374
+       Total |  .011762251        31  .000379427   Root MSE        =    .01586
+
+------------------------------------------------------------------------------
+      ln_div | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+      ln_oil |    .049291   .0119225     4.13   0.000     .0248688    .0737132
+      ln_fdi |   .0035656   .0068399     0.52   0.606    -.0104453    .0175766
+  vision2030 |   .0205553   .0096694     2.13   0.042     .0007484    .0403623
+       _cons |   4.370627   .0422299   103.50   0.000     4.284123    4.457131
+------------------------------------------------------------------------------
+
+. 
+. *** DIAGNOSTIC TESTS ***
+. 
+. * Test for first-order autocorrelation
+. estat dwatson
+
+Durbin–Watson d-statistic(  4,    32) =  .5714416
+
+. 
+. * Test for higher-order autocorrelation
+. estat bgodfrey, lags(1 2 3 4)
+
+Breusch–Godfrey LM test for autocorrelation
+---------------------------------------------------------------------------
+    lags(p)  |          chi2               df                 Prob > chi2
+-------------+-------------------------------------------------------------
+       1     |         15.979               1                   0.0001
+       2     |         20.820               2                   0.0000
+       3     |         22.790               3                   0.0000
+       4     |         22.913               4                   0.0001
+---------------------------------------------------------------------------
+                        H0: no serial correlation
+
+. 
+. * Testing for Heteroskedasticity
+. estat hettest
+
+Breusch–Pagan/Cook–Weisberg test for heteroskedasticity 
+Assumption: Normal error terms
+Variable: Fitted values of ln_div
+
+H0: Constant variance
+
+    chi2(1) =   0.06
+Prob > chi2 = 0.8044
+
+. 
+. *** ROBUSTNESS CHECKS ***
+. 
+. * HAC Standard Errors
+. regress div oil_rents fdi vision2030, vce(hac nwest 2)
+
+Linear regression                                       Number of obs =     32
+                                                        F(3, 28)      =   7.05
+                                                        Prob > F      = 0.0011
+                                                        R-squared     = 0.4160
+                                                        Adj R-squared = 0.3535
+                                                        Root MSE      = 1.4817
+
+------------------------------------------------------------------------------
+             |                 HAC
+         div | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+   oil_rents |   .1408421   .0316524     4.45   0.000     .0760051    .2056791
+         fdi |   -.047537   .2253587    -0.21   0.834    -.5091634    .4140893
+  vision2030 |   1.894662   .7881635     2.40   0.023     .2801824    3.509142
+       _cons |   89.46385   1.297423    68.96   0.000     86.80619     92.1215
+------------------------------------------------------------------------------
+HAC VCE:  Bartlett kernel with 2 lags
+
+. 
+. * Structual Break Analysis
+. regress div oil_rents vision2030 c.fdi#i.vision2030
+
+      Source |       SS           df       MS      Number of obs   =        32
+-------------+----------------------------------   F(4, 27)        =      4.89
+       Model |  44.2461658         4  11.0615414   Prob > F        =    0.0042
+    Residual |  61.0278687        27  2.26029143   R-squared       =    0.4203
+-------------+----------------------------------   Adj R-squared   =    0.3344
+       Total |  105.274034        31   3.3959366   Root MSE        =    1.5034
+
+----------------------------------------------------------------------------------
+             div | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+       oil_rents |   .1396146    .032382     4.31   0.000     .0731723     .206057
+      vision2030 |   2.160512   1.062149     2.03   0.052    -.0188376    4.339861
+                 |
+vision2030#c.fdi |
+              0  |   .0295204   .3177546     0.09   0.927    -.6224581    .6814989
+              1  |  -.2294368   .4877903    -0.47   0.642      -1.2303    .7714261
+                 |
+           _cons |   89.47235   1.223011    73.16   0.000     86.96294    91.98177
+----------------------------------------------------------------------------------
+
+. 
+. * 2SLS Regression
+. ivregress 2sls div oil_rents vision2030 (fdi = L.fdi), first 
+
+First-stage regressions
+-----------------------
+
+                                                        Number of obs =     31
+                                                        F(3, 27)      =   1.37
+                                                        Prob > F      = 0.2742
+                                                        R-squared     = 0.1318
+                                                        Adj R-squared = 0.0353
+                                                        Root MSE      = 1.0668
+
+------------------------------------------------------------------------------
+         fdi | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+   oil_rents |     .01378    .023116     0.60   0.556    -.0336501    .0612102
+  vision2030 |   1.077208   .5953585     1.81   0.082     -.144367    2.298782
+             |
+         fdi |
+         L1. |   .0736524   .1950846     0.38   0.709    -.3266282    .4739329
+             |
+       _cons |  -.1046594   .8785211    -0.12   0.906    -1.907236    1.697917
+------------------------------------------------------------------------------
+
+
+Instrumental-variables 2SLS regression            Number of obs   =         31
+                                                  Wald chi2(3)    =       2.82
+                                                  Prob > chi2     =     0.4196
+                                                  Root MSE        =     4.3787
+
+------------------------------------------------------------------------------
+         div | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         fdi |   4.251829   10.87161     0.39   0.696    -17.05614    25.55979
+   oil_rents |   .0943434   .1804478     0.52   0.601    -.2593278    .4480146
+  vision2030 |  -2.837748   12.39299    -0.23   0.819    -27.12757    21.45207
+       _cons |   89.41938   3.706436    24.13   0.000      82.1549    96.68386
+------------------------------------------------------------------------------
+Endogenous: fdi
+Exogenous:  oil_rents vision2030 L.fdi
+
+. 
+. * Post-Estimation
+. estat firststage // Check if instrument is weak
+
+  First-stage regression summary statistics
+  --------------------------------------------------------------------------
+               |            Adjusted      Partial
+      Variable |   R-sq.       R-sq.        R-sq.       F(1,27)   Prob > F
+  -------------+------------------------------------------------------------
+           fdi |  0.1318      0.0353       0.0053       .142537    0.7087
+  --------------------------------------------------------------------------
+
+
+  Minimum eigenvalue statistic = .142537     
+
+  Critical Values                      # of endogenous regressors:    1
+  H0: Instruments are weak             # of excluded instruments:     1
+  ---------------------------------------------------------------------
+                                     |    5%     10%     20%     30%
+  2SLS relative bias                 |         (not available)
+  -----------------------------------+---------------------------------
+                                     |   10%     15%     20%     25%
+  2SLS size of nominal 5% Wald test  |  16.38    8.96    6.66    5.53
+  LIML size of nominal 5% Wald test  |  16.38    8.96    6.66    5.53
+  ---------------------------------------------------------------------
+
+
+. 
+. * Chow Test for Structural Break
+. regress div oil_rents services industry fdi if year < 2016
+
+      Source |       SS           df       MS      Number of obs   =        26
+-------------+----------------------------------   F(4, 21)        >  99999.00
+       Model |  88.7784055         4  22.1946014   Prob > F        =    0.0000
+    Residual |  1.1799e-10        21  5.6184e-12   R-squared       =    1.0000
+-------------+----------------------------------   Adj R-squared   =    1.0000
+       Total |  88.7784055        25  3.55113622   Root MSE        =    2.4e-06
+
+------------------------------------------------------------------------------
+         div | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+   oil_rents |  -1.12e-08   1.27e-07    -0.09   0.931    -2.76e-07    2.54e-07
+    services |          1   4.45e-07  2.2e+06   0.000     .9999995    1.000001
+    industry |          1   3.53e-07  2.8e+06   0.000     .9999995    1.000001
+         fdi |  -1.67e-07   5.03e-07    -0.33   0.743    -1.21e-06    8.78e-07
+       _cons |   -.000031   .0000361    -0.86   0.400     -.000106     .000044
+------------------------------------------------------------------------------
+
+. scalar rss_pre = e(rss)
+
+. regress div oil_rents services industry fdi if year >= 2016
+
+      Source |       SS           df       MS      Number of obs   =         6
+-------------+----------------------------------   F(4, 1)         >  99999.00
+       Model |  16.3060848         4   4.0765212   Prob > F        =    0.0000
+    Residual |  2.1368e-12         1  2.1368e-12   R-squared       =    1.0000
+-------------+----------------------------------   Adj R-squared   =    1.0000
+       Total |  16.3060848         5  3.26121696   Root MSE        =    1.5e-06
+
+------------------------------------------------------------------------------
+         div | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+   oil_rents |    -.00001   6.12e-06    -1.64   0.348    -.0000877    .0000677
+    services |   .9999997   5.35e-07  1.9e+06   0.000     .9999929    1.000006
+    industry |   1.000011   7.38e-06  1.4e+05   0.000     .9999169    1.000104
+         fdi |  -2.97e-06   1.96e-06    -1.52   0.371    -.0000279     .000022
+       _cons |  -.0002272   .0002083    -1.09   0.472     -.002874    .0024197
+------------------------------------------------------------------------------
+
+. scalar rss_post = e(rss)
+
+. regress div oil_rents services industry fdi // Pooled model
+
+      Source |       SS           df       MS      Number of obs   =        32
+-------------+----------------------------------   F(4, 27)        >  99999.00
+       Model |  105.274034         4  26.3185086   Prob > F        =    0.0000
+    Residual |  1.6172e-10        27  5.9897e-12   R-squared       =    1.0000
+-------------+----------------------------------   Adj R-squared   =    1.0000
+       Total |  105.274034        31   3.3959366   Root MSE        =    2.4e-06
+
+------------------------------------------------------------------------------
+         div | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+   oil_rents |  -4.11e-08   1.27e-07    -0.32   0.749    -3.02e-07    2.20e-07
+    services |          1   3.27e-07  3.1e+06   0.000     .9999994    1.000001
+    industry |          1   2.93e-07  3.4e+06   0.000     .9999994    1.000001
+         fdi |   4.00e-08   4.10e-07     0.10   0.923    -8.01e-07    8.81e-07
+       _cons |  -3.86e-06   .0000275    -0.14   0.889    -.0000603    .0000525
+------------------------------------------------------------------------------
+
+. scalar rss_pooled = e(rss)
+
+. 
+. * Calculate Chow F-stat
+. display ((rss_pooled - (rss_pre + rss_post)) / 5) / ((rss_pre + rss_post) / (_N - 10))
+1.5236932
+
+. 
+. log close
+      name:  <unnamed>
+       log:  C:\Users\Simrat Khalsa\Downloads\Econometrics Research Project\diversification_analys
+> is.txt
+  log type:  text
+ closed on:   2 Apr 2026, 18:36:10
+--------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\Simrat Khalsa\Downloads\Econometrics Research Project\diversification_analys
+> is.txt
+  log type:  text
+ opened on:   2 Apr 2026, 18:36:10
+
+. 
+. log close
+      name:  <unnamed>
+       log:  C:\Users\Simrat Khalsa\Downloads\Econometrics Research Project\diversification_analys
+> is.txt
+  log type:  text
+ closed on:   2 Apr 2026, 18:36:10
+--------------------------------------------------------------------------------------------------

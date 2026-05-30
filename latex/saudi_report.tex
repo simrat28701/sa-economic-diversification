@@ -1,0 +1,466 @@
+\documentclass[12pt, a4paper]{article}
+
+% ---------- Packages ----------
+\usepackage[top=2.5cm, bottom=2.5cm, left=3cm, right=3cm, headheight=14pt]{geometry}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{fancyhdr}
+\usepackage{abstract}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{palatino}
+\usepackage{threeparttable}
+
+% ---------- Hyperlink setup ----------
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    urlcolor=blue,
+    pdftitle={Economic Diversification in Saudi Arabia: The Role of Oil Rents, FDI, and Vision 2030},
+    pdfauthor={Simrat Kaur Khalsa}
+}
+
+% ---------- Line spacing ----------
+\setstretch{1.5}
+
+% ---------- Section heading style ----------
+\titleformat{\section}
+  {\large\bfseries}{\thesection.}{0.8em}{}[\titlerule]
+\titleformat{\subsection}
+  {\normalsize\bfseries}{\thesubsection.}{0.6em}{}
+\titlespacing*{\section}{0pt}{1.8em}{0.8em}
+\titlespacing*{\subsection}{0pt}{1.2em}{0.4em}
+
+% ---------- TOC styling ----------
+\renewcommand{\cftsecfont}{\bfseries}
+\renewcommand{\cftsecpagefont}{\bfseries}
+\setlength{\cftbeforesecskip}{4pt}
+
+% ---------- Header / footer ----------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\itshape Economic Diversification in Saudi Arabia}
+\fancyhead[R]{\small\itshape Oil Rents, FDI, and Vision 2030}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyfoot[C]{\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+}
+
+% ---------- Caption formatting ----------
+\captionsetup{
+    font=small,
+    labelfont={bf,it},
+    textfont=it,
+    justification=centering,
+    skip=8pt
+}
+
+% ---------- Bibliography style ----------
+\bibliographystyle{plainnat}
+
+% ==========================================
+\begin{document}
+% ==========================================
+
+% ---------- Title page ----------
+\begin{titlepage}
+    \centering
+    \vspace*{3cm}
+    {\LARGE\bfseries Economic Diversification in Saudi Arabia:\par}
+    \vspace{0.4em}
+    {\Large\bfseries The Role of Oil Rents, FDI, and Vision 2030\par}
+    \vspace{2.5cm}
+    {\large Simrat Kaur Khalsa\par}
+    \vspace{0.4em}
+    {\normalsize Student ID: 26038186\par}
+    \vspace{0.4em}
+    {\normalsize\itshape University of Kent\par}
+    \vspace{3cm}
+    {\normalsize 4 March 2026\par}
+    \vfill
+    \hrule
+    \vspace{0.5em}
+    {\small\itshape Submitted to SSRN\par}
+\end{titlepage}
+
+% ---------- Abstract ----------
+\newpage
+\thispagestyle{plain}
+\begin{abstract}
+\noindent
+This paper examines the impact of oil rents, Foreign Direct Investment (FDI), and the Vision 2030 reform programme on economic diversification in Saudi Arabia over the period 1990--2021. Using time-series econometric methods --- including OLS with HAC (Newey-West) standard errors, interaction analysis, and Instrumental Variable (IV) estimation via 2SLS --- the study finds that oil rents have exerted a positive and statistically significant effect on diversification, supporting the ``resource blessing'' hypothesis. Vision 2030 is associated with a significant upward level shift in the diversification index. FDI, however, remains statistically insignificant across all specifications, suggesting that foreign capital has not yet become a primary driver of structural transformation. These findings underscore the central role of coherent state-led policy in navigating the transition beyond hydrocarbon dependence.
+\end{abstract}
+
+\vspace{1em}
+\noindent\textbf{Keywords:} economic diversification, Saudi Arabia, oil rents, FDI, Vision 2030, resource blessing, HAC standard errors, instrumental variables
+
+% ---------- Table of Contents ----------
+\newpage
+\thispagestyle{plain}
+\tableofcontents
+
+% ---------- Main text ----------
+\newpage
+
+\section{Introduction}
+
+Economic diversification is an important strategy for oil-dependent nations seeking to reduce the inherent risks of trade concentration and ensure long-term fiscal stability \citep{touati2024}. For such economies, it is necessary to transition beyond a narrow commodity base and navigate the financial instabilities that are inevitable given global energy volatility \citep{alroubaie2025}. As the largest economy in the Middle East and a prominent G20 member, the Kingdom of Saudi Arabia has historically functioned as a global energy powerhouse, holding approximately 22\% of the world's proven oil reserves \citep{anser2020}. For decades, oil and gas revenues have served as the foundation of the Saudi economy, funding social welfare programmes, national development projects, and underpinning the Kingdom's pivotal role in the international political economy \citep{sallam2026}.
+
+Despite this immense resource wealth, Saudi Arabia faces a challenge rooted in its heavy overdependence on oil revenues, which currently contribute approximately 45\% to real GDP and 70\% to total export earnings. Furthermore, the global push towards decarbonisation and the emergence of ``peak demand'' for fossil fuels pose a serious threat to the long-term sustainability of the rentier state model \citep{sallam2026}. This creates a paradox of plenty, where resource abundance may ultimately hinder economic growth unless substantial investment is made in high-technology infrastructure. There is therefore a pressing need to transition toward a more resilient, knowledge-based economy that reallocates capital toward productive non-energy sectors to stabilise national income \citep{alroubaie2025}.
+
+These challenges were addressed in 2016 when the Kingdom introduced \textbf{Vision 2030} as a transformative national strategic framework. This state-led initiative aims to break away from historical oil dependency and rebuild the nation's economic and social infrastructure through investments in emerging technologies --- including AI and digital services --- alongside sustainable energy. The central goal of this reform is to increase the share of non-oil exports in GDP from 16\% to 50\%, fostering a vibrant business environment in which the private sector serves as the primary engine of growth \citep{touati2024}.
+
+In this context, this paper examines the impact of oil rents, FDI, and Vision 2030 on economic diversification in Saudi Arabia. Two primary research questions guide the analysis:
+
+\begin{enumerate}
+    \item Has Vision 2030 had a measurable impact on economic diversification?
+    \item Has oil rents played a role in diversification?
+\end{enumerate}
+
+The contribution of this research lies in its time-series analysis covering 1990--2021, providing a robust evaluation through econometric methods including HAC (Newey-West) standard errors to correct for serial correlation, and Instrumental Variable (IV) estimation to address potential endogeneity in FDI inflows.
+
+\section{Literature Review}
+
+\subsection{The Resource Curse and Dutch Disease}
+
+The ``natural resource curse'' describes a paradoxical economic phenomenon where nations possessing an abundance of non-renewable natural resources often experience lower levels of economic growth and diversification than those without such endowments \citep{anser2020}. This curse operates partly through the ``Dutch Disease'': increased oil revenues drive up domestic demand and real wages, causing the real exchange rate to appreciate and undermining the international competitiveness of non-oil exports \citep{ashour2024}. Traditional economic theory therefore postulates a negative relationship between oil rents and economic diversification.
+
+\subsection{The Resource Blessing Hypothesis}
+
+However, recent empirical findings have observed a positive relationship between oil rents and diversification. This aligns with the ``resource blessing'' hypothesis, which suggests that under specific conditions --- particularly where natural resource management is technology-intensive --- oil rents can be effectively leveraged to finance structural change \citep{anser2020}. Empirical evidence from Saudi Arabia confirms that oil rents have exhibited a positive impact on economic growth, suggesting that the Kingdom is successfully managing its windfall to support broader economic activities under its current strategic framework.
+
+\subsection{FDI and Diversification}
+
+Foreign Direct Investment (FDI) is theorised as a primary catalyst for diversification because it facilitates technology transfer, provides access to international markets, and injects the capital necessary to grow non-traditional industries \citep{alroubaie2025}. However, the empirical literature on this relationship remains highly mixed \citep{sallam2026}. While some studies in emerging markets document a positive link, others --- such as \citet{sadorsky2012} --- argue that the economic benefits of foreign investment are not intrinsic or immediate, depending heavily on institutional readiness and skilled labour.
+
+\subsection{The Role of Government Policy and Vision 2030}
+
+Government policy plays a crucial role in the diversification process by providing regulatory frameworks, investing in human capital, and reducing market disruptions \citep{alroubaie2025}. For Saudi Arabia, this role centres on breaking its path dependency on hydrocarbons. Vision 2030 provides a strategic framework to dismantle this dependency by transforming the Kingdom into a knowledge-based economy. Existing literature highlights that the Vision represents an integrated approach where environmental and industrial policies are embedded in a grand strategy for transformation, with non-oil activities reaching a milestone of 50\% of real GDP in 2023 \citep{sallam2026}.
+
+Despite the scale of recent reforms, there is a noticeable gap in the literature regarding the empirical evaluation of realised policy outcomes. As noted by \citet{sallam2026}, existing studies rely mainly on simulation and projection techniques rather than post-implementation analysis, and only a few have used quantitative econometric models to analyse diversification specifically in the context of Vision 2030 adoption. This paper attempts to address this gap.
+
+\section{Descriptive Statistics}
+
+To address the limited empirical evidence on Vision 2030 outcomes, a quantitative time-series framework was used to evaluate the drivers of Saudi Arabia's economic transformation. The dataset was retrieved from the World Bank database and spans 1990--2021, enabling a pre- versus post-2016 assessment of how economic factors have changed alongside recent policy shifts.
+
+The analysis was conducted in Stata using the \textit{describe} and \textit{summarize} commands for data structure and variability, and the series was declared as a time series using \texttt{tsset year}. Four key variables were used:
+
+\begin{enumerate}
+    \item \textbf{div} (Dependent Variable): The non-oil share of GDP, calculated as the sum of services and industry output.
+    \item \textbf{oil\_rents}: The percentage of GDP derived from oil revenues, serving as the primary indicator of resource dependence.
+    \item \textbf{fdi}: Net foreign direct investment inflows as a percentage of GDP.
+    \item \textbf{vision2030}: A binary dummy variable (0 = pre-2016; 1 = 2016--2021) used to identify intercept shifts and structural breaks resulting from the 2016 initiative.
+\end{enumerate}
+
+\subsection{Summary Statistics}
+
+Table~\ref{tab:summary} presents the distribution of all variables over the full sample period (1990--2021).
+
+\begin{table}[H]
+\centering
+\begin{threeparttable}
+\caption{Summary Statistics, 1990--2021}
+\label{tab:summary}
+\begin{tabular}{lcccc}
+    \toprule
+    \textbf{Variable} & \textbf{Mean} & \textbf{Std.\ Dev.} & \textbf{Min} & \textbf{Max} \\
+    \midrule
+    div        & 94.64 & 1.84  & 91.76  & 97.18 \\
+    oil\_rents & 34.44 & 10.25 & 15.98  & 54.09 \\
+    fdi        & 0.65  & 1.08  & $-$1.31 & 3.19  \\
+    \bottomrule
+\end{tabular}
+\begin{tablenotes}
+    \small
+    \item \textit{Note}: The minimum FDI value reflects net disinvestment periods.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+To further investigate the relationships, a time-series plot was generated using the \textit{tsline} command to visualise how shares of GDP by sector varied from 1990 to 2021.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.78\textwidth]{sa_fig1_gdp_sectors.png}
+    \caption{\textit{Shares of GDP by Sector, 1990--2021.} The plot displays the trajectories of oil rents, the services sector, and industry as shares of GDP over the sample period.}
+    \label{fig:gdp_sectors}
+\end{figure}
+
+\subsection{Pre- vs Post-2016 Comparison}
+
+A descriptive comparison was performed by summarising economic indicators across the two distinct sub-periods. The results are presented in Tables~\ref{tab:pre2016} and~\ref{tab:post2016}.
+
+\begin{table}[H]
+\centering
+\caption{Summary Statistics: Pre-2016 Period}
+\label{tab:pre2016}
+\begin{tabular}{lcccc}
+    \toprule
+    \textbf{Variable} & \textbf{Mean} & \textbf{Std.\ Dev.} & \textbf{Min} & \textbf{Max} \\
+    \midrule
+    oil\_rents & 37.17 & 9.24 & 21.27   & 54.09 \\
+    div        & 94.68 & 1.88 & 92.04   & 97.18 \\
+    fdi        & 0.48  & 0.96 & $-$1.31 & 2.92  \\
+    \bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Summary Statistics: Post-2016 Period}
+\label{tab:post2016}
+\begin{tabular}{lcccc}
+    \toprule
+    \textbf{Variable} & \textbf{Mean} & \textbf{Std.\ Dev.} & \textbf{Min} & \textbf{Max} \\
+    \midrule
+    oil\_rents & 22.62 & 4.14 & 15.98 & 28.08 \\
+    div        & 94.48 & 1.81 & 91.76 & 96.32 \\
+    fdi        & 1.36  & 1.38 & 0.14  & 3.19  \\
+    \bottomrule
+\end{tabular}
+\end{table}
+
+The comparative analysis reveals a significant shift in the Kingdom's economic profile. Most notably, mean oil rents fell from 37.17\% to 22.62\% --- a reduction of nearly 40\% --- suggesting that the Kingdom successfully began to decouple its GDP from hydrocarbon revenues. The standard deviation for oil rents also fell from 9.24 to 4.14, indicating that the economy became considerably less volatile and more resilient to global energy market shocks.
+
+FDI increased substantially, with the mean nearly tripling from 0.48 to 1.36. This implies that Vision 2030 reforms successfully enhanced the Kingdom's attractiveness to international investors; notably, the minimum FDI value shifted from $-$1.31 (net disinvestment) to 0.14, reflecting a more consistent inflow since the reform era began. However, the rise in standard deviation signals that these inflows remain sensitive to external global conditions.
+
+The mean for \textit{div} remained remarkably stable (94.68 to 94.48). Although the diversification proxy itself changed little, the sharp drop in oil rents suggests that non-oil sectors held their ground as the economy transitioned away from hydrocarbon path dependency.
+
+\section{Regression Analysis}
+
+To evaluate the impact of resource dependency and policy shifts on Saudi Arabia's structural transformation, two primary econometric models were estimated.
+
+\noindent\textbf{Baseline OLS:}
+\begin{equation}
+    \text{div}_t = \beta_0 + \beta_1\,\text{oil\_rents}_t + \beta_2\,\text{fdi}_t + \beta_3\,\text{vision2030}_t + u_t
+\end{equation}
+
+\noindent\textbf{Log-Log Model:}
+\begin{equation}
+    \ln(\text{div}_t) = \beta_0 + \beta_1\ln(\text{oil\_rents}_t) + \beta_2\ln(\text{fdi}_t) + \beta_3\,\text{vision2030}_t + u_t
+\end{equation}
+
+\begin{table}[H]
+\centering
+\begin{threeparttable}
+\caption{Regression Analysis of Economic Diversification}
+\label{tab:regression}
+\begin{tabular}{lcc}
+    \toprule
+    \textbf{Variable} & \textbf{OLS} & \textbf{Log-Log} \\
+    \midrule
+    oil\_rents  & 0.141$^{***}$ & 0.049$^{***}$ \\
+                & (0.032)       & (0.012)       \\[4pt]
+    fdi         & $-$0.048      & 0.004         \\
+                & (0.263)       & (0.007)       \\[4pt]
+    vision2030  & 1.895$^{**}$  & 0.021$^{**}$  \\
+                & (1.205)       & (0.01)        \\
+    \bottomrule
+\end{tabular}
+\begin{tablenotes}
+    \small
+    \item \textit{Note}: Dependent variable is the non-oil share of GDP. Standard errors in parentheses. $^{***}p < 0.01$; $^{**}p < 0.05$.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+The initial OLS estimation yielded three key results:
+
+\begin{itemize}
+    \item \textbf{Oil Rents}: A positive and highly significant relationship at the 1\% level. For every 1\% increase in oil rents as a share of GDP, economic diversification increases by 0.141 units, supporting the resource blessing hypothesis.
+    \item \textbf{FDI}: The coefficient is statistically insignificant, with the standard error far exceeding the coefficient itself, indicating that international capital inflows have not yet had a measurable impact on structural transformation.
+    \item \textbf{Vision 2030}: Statistically significant at the 5\% level. Implementation is associated with an average increase of 1.895 units in the diversification index, confirming a positive structural shift since 2016.
+\end{itemize}
+
+In the log-log model, oil rents yield an elasticity of 0.049, meaning a 1\% increase in oil rents leads to a 0.049\% increase in diversification. FDI remains insignificant, and the Vision 2030 coefficient implies an approximately 2.1\% increase in diversification since adoption.
+
+\subsection{Diagnostic Tests}
+
+\begin{table}[H]
+\centering
+\caption{Diagnostic Tests for Serial Correlation}
+\label{tab:diagnostics}
+\begin{tabular}{lccc}
+    \toprule
+    \textbf{Test} & \textbf{Statistic} & \textbf{$p$-value} & \textbf{Conclusion} \\
+    \midrule
+    Durbin-Watson          & 0.57   & ---    & Positive autocorrelation \\
+    Breusch-Godfrey (lag 1) & 15.979 & 0.0001 & Reject $H_0$ \\
+    Breusch-Godfrey (lag 2) & 20.820 & 0.0000 & Reject $H_0$ \\
+    Breusch-Godfrey (lag 3) & 22.790 & 0.0000 & Reject $H_0$ \\
+    Breusch-Godfrey (lag 4) & 22.913 & 0.0001 & Reject $H_0$ \\
+    \bottomrule
+\end{tabular}
+\end{table}
+
+The diagnostic phase revealed that while the model satisfied the homoskedasticity assumption, it significantly violated the no-serial-correlation assumption. The Durbin-Watson statistic of 0.5714 and the Breusch-Godfrey tests confirm the presence of strong positive first-order and higher-order autocorrelation (Table~\ref{tab:diagnostics}).
+
+The Breusch-Pagan test for heteroskedasticity returned a $p$-value of 0.8044, far exceeding the 0.05 threshold, meaning the null hypothesis was not rejected. The Gauss-Markov assumption of constant variance therefore holds. Figure~\ref{fig:residuals} provides a visual confirmation: the scatter plot of residuals against fitted values shows a random distribution around the horizontal axis with no discernible funnelling pattern.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.72\textwidth]{sa_fig2_residuals.png}
+    \caption{\textit{Residuals vs.\ Fitted Values Plot for Homoskedasticity Testing.} The random scatter of residuals around the horizontal axis confirms the absence of heteroskedasticity.}
+    \label{fig:residuals}
+\end{figure}
+
+\section{Robustness Checks}
+
+\subsection{HAC Standard Errors}
+
+Because error terms are serially correlated, conventional OLS standard errors are biased and hypothesis tests are invalid. Following the Goldilocks method for lag truncation, the model was re-estimated using Heteroskedasticity and Autocorrelation Consistent (HAC) standard errors (Newey-West) with two lags.
+
+\begin{table}[H]
+\centering
+\begin{threeparttable}
+\caption{OLS with HAC (Newey-West) Standard Errors}
+\label{tab:hac}
+\begin{tabular}{lc}
+    \toprule
+    \textbf{Variable} & \textbf{HAC} \\
+    \midrule
+    oil\_rents & 0.141$^{***}$ \\
+               & (0.032)       \\[4pt]
+    fdi        & $-$0.048      \\
+               & (0.225)       \\[4pt]
+    vision2030 & 1.895$^{**}$  \\
+               & (1.297)       \\
+    \bottomrule
+\end{tabular}
+\begin{tablenotes}
+    \small
+    \item \textit{Note}: $^{***}p < 0.01$; $^{**}p < 0.05$.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+Under HAC inference, oil rents remained a positive and highly significant driver of diversification, supporting the resource blessing hypothesis. Vision 2030 retained its significant positive impact. FDI remained statistically insignificant ($p = 0.834$), reaffirming that international capital has not yet triggered measurable structural change.
+
+\subsection{Structural Break and Interaction Analysis}
+
+To determine whether the marginal effect of FDI on diversification changed following Vision 2030, an interaction term was introduced:
+
+\begin{equation}
+    \text{div}_t = \beta_0 + \beta_1\,\text{oil\_rents}_t + \beta_2\,\text{fdi}_t + \beta_3\,\text{vision2030}_t + \beta_4(\text{vision2030}_t \times \text{fdi}_t) + u_t
+\end{equation}
+
+\begin{table}[H]
+\centering
+\begin{threeparttable}
+\caption{Structural Break and Interaction Analysis}
+\label{tab:interaction}
+\begin{tabular}{lc}
+    \toprule
+    \textbf{Variable} & \textbf{OLS} \\
+    \midrule
+    oil\_rents                      & 0.140$^{***}$ \\
+                                    & (0.032) \\[4pt]
+    vision2030                      & 2.161$^{**}$ \\
+                                    & (1.062) \\[4pt]
+    vision2030 $\times$ fdi (pre)   & 0.030 \\
+                                    & (0.318) \\[4pt]
+    vision2030 $\times$ fdi (post)  & $-$0.229 \\
+                                    & (1.223) \\
+    \bottomrule
+\end{tabular}
+\begin{tablenotes}
+    \small
+    \item \textit{Note}: $^{***}p < 0.01$; $^{**}p < 0.05$.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+The interaction terms for both the pre- and post-reform periods were statistically insignificant ($p = 0.927$ and $p = 0.642$, respectively). While Vision 2030 caused a level shift in the economy, it has not yet altered the slope relationship between FDI and diversification, suggesting that the Kingdom's absorptive capacity for foreign technology remains an area for further development.
+
+\subsection{Two-Stage Least Squares (2SLS)}
+
+To address potential endogeneity --- where diversification might attract FDI rather than the reverse --- IV estimation via 2SLS was employed. The first lag of FDI (L1.fdi) was used as the instrument.
+
+\begin{table}[H]
+\centering
+\begin{threeparttable}
+\caption{Two-Stage Least Squares (2SLS) Results}
+\label{tab:2sls}
+\begin{tabular}{lcc}
+    \toprule
+    \textbf{Variable} & \textbf{First Stage} & \textbf{2SLS} \\
+    \midrule
+    oil\_rents & 0.138 (0.023)  & 0.094 (0.180)    \\[4pt]
+    fdi        & 0.074 (0.195)  & 4.252 (10.872)   \\[4pt]
+    vision2030 & 1.077 (0.595)  & $-$2.838 (3.706) \\
+    \bottomrule
+\end{tabular}
+\begin{tablenotes}
+    \small
+    \item \textit{Note}: Standard errors in parentheses.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+The 2SLS results show that FDI remains insignificant ($p = 0.696$) even after controlling for endogeneity. The loss of significance for oil\_rents and vision2030 in the IV model reflects the well-known efficiency trade-off in small-sample time-series settings, where IV estimators often lack precision if the instrument is insufficiently strong.
+
+\subsection{Instrument Relevance Diagnostics}
+
+First-stage diagnostics revealed a serious relevance problem. The excluded instrument (L1.fdi) yielded an $F$-statistic of 0.143 ($p = 0.7087$), far below the rule-of-thumb threshold of 10 suggested by \citet{stock2002}. The minimum eigenvalue statistic (0.142) was also well below the Stock-Yogo critical value of 16.38, confirming that lagged FDI is a weak predictor of current FDI in the Saudi context and rendering 2SLS results unreliable.
+
+\subsection{Chow Test}
+
+\begin{table}[H]
+\centering
+\caption{Chow Test for Structural Break at 2016}
+\label{tab:chow}
+\begin{tabular}{lc}
+    \toprule
+    \textbf{Component} & \textbf{Value} \\
+    \midrule
+    RSS (Pre-2016)  & $1.1799 \times 10^{-10}$ \\
+    RSS (Post-2016) & $2.1368 \times 10^{-12}$ \\
+    RSS (Pooled)    & $1.6172 \times 10^{-10}$ \\
+    Chow $F$-statistic & 1.524 \\
+    Observations    & 32 \\
+    Parameters ($k$) & 5 \\
+    \bottomrule
+\end{tabular}
+\end{table}
+
+The Chow $F$-statistic of 1.524 failed to exceed the 5\% critical value of approximately 2.66, so the null hypothesis of constant parameters across periods is not rejected. Although a level shift was identified through the dummy variable, the fundamental economic relationships remained structurally stable throughout the transition.
+
+\section{Conclusion}
+
+This study examined the drivers of economic diversification in Saudi Arabia between 1990 and 2021. The results indicate that oil rents have played a positive and statistically significant role in supporting diversification, suggesting that Saudi Arabia has been able to leverage resource revenues to develop its broader economy rather than fall victim to the traditional resource curse.
+
+Vision 2030 appears to have reinforced this transition, producing a positive level shift in the diversification index and accelerating movement toward a more knowledge-based economic structure. FDI, by contrast, remained statistically insignificant across all specifications, suggesting that foreign investment has not yet become a primary driver of structural change.
+
+These findings underscore the importance of coherent state-led policy in shaping economic outcomes. While oil revenues continue to provide essential financial support, long-term diversification depends on strengthening the economy's capacity to absorb and utilise foreign investment alongside continued reform implementation.
+
+The analysis has several limitations: the sample size is relatively small, autocorrelation required the use of HAC standard errors, attempts to address endogeneity were constrained by a weak instrument, and the diversification proxy does not fully capture more nuanced structural changes within the economy. Future research could build on these findings by exploring stronger instruments, incorporating panel data approaches, and employing more granular measures of diversification to better understand the conditions under which Saudi Arabia can sustain a durable transition toward resilience and competitiveness.
+
+% ---------- Data Availability ----------
+\section*{Data Availability Statement}
+
+The dataset used in this study was compiled from the World Bank World Development Indicators and covers Saudi Arabia over the period 1990--2021. It is publicly available on Kaggle at:
+
+\begin{center}
+\url{https://www.kaggle.com/datasets/simratkhalsa287/sa-economic-diversification-1990-2021-world-bank}
+\end{center}
+
+% ---------- References ----------
+\newpage
+\bibliography{saudi_references}
+
+\end{document}
